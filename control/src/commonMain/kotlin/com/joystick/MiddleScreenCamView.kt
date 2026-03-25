@@ -2,6 +2,9 @@ package com.joystick
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,11 +43,17 @@ fun MiddleScreenCamView(
 ) {
     val frameState by frameFlow.collectAsState()
 
-    var number by remember { mutableFloatStateOf(0f) }
     var yy by remember { mutableFloatStateOf(0f) }
     var xx by remember { mutableFloatStateOf(0f) }
+
+    var zoom by remember { mutableFloatStateOf(0f) }
+
+    var rotation by remember { mutableFloatStateOf(0f) }
+
+
     var count by remember { mutableLongStateOf(0) }
     var text by remember { mutableStateOf("Click magenta box!") }
+
     Box(
         Modifier
             .fillMaxSize()
@@ -53,59 +62,101 @@ fun MiddleScreenCamView(
 //                detectTransformGestures { _, pan, zoom, _ ->
 //                    println("Pointer Panx: ${pan.x}, pany:${pan.y} , zoom:$zoom")
 //                }
-                awaitPointerEventScope {
-                    while (true) {
-                        val event = awaitPointerEvent()
-                        // Handle raw event (e.g., event.type == PointerEventType.Move)
-                        // println("Pointer Event: ${event.type}")
-                        when (event.type) {
+                awaitEachGesture {
+                    //   awaitPointerEventScope {                    while (true) {
 
-                            PointerEventType.Scroll -> {
-                                number += event.changes.first().scrollDelta.y
-                            }
 
-                            PointerEventType.Move -> {
-                                yy = event.changes.first().position.y
-                                xx = event.changes.first().position.x
-                            }
+                    val event = awaitPointerEvent()
+                    val inputChange = event.changes.first()
 
-                            PointerEventType.Press -> {
-                                // number2 = event.changes.first().id.value
-                                println(event.changes.first())
+
+                    //  if (inputChange.type == PointerType.Mouse) {
+
+                    when (event.type) {
+                        PointerEventType.Scroll -> {
+                            zoom += inputChange.scrollDelta.y
+                        }
+
+                        PointerEventType.Move -> {
+                            if (inputChange.pressed) {
+                                println(event)
+                                if ((inputChange.previousPosition.y - inputChange.position.y) > 0)
+                                    yy += 1
+
+                                if ((inputChange.previousPosition.y - inputChange.position.y) < 0)
+                                    yy -= 1
+
+                                if ((inputChange.previousPosition.x - inputChange.position.x) > 0)
+                                    xx += 1
+
+                                if ((inputChange.previousPosition.x - inputChange.position.x) < 0)
+                                    xx -= 1
                             }
                         }
+
+                        PointerEventType.Press -> {
+                            //inputChange.consume()
+                            println(inputChange)
+
+                        }
+
+                        PointerEventType.Release -> {
+                            
+                        }
+
                     }
+
+
+                    //}
                 }
 
             }.combinedClickable(
                 onClick = {
                     text = "Click! ${count++}"
-                    GimballYawDrop()
                 },
                 onDoubleClick = {
                     text = "Double click! ${count++}"
                 },
                 onLongClick = {
                     text = "Long click! ${count++}"
-                    GimballReset()
                 }
-            )
+            ).transformable(
+                lockRotationOnZoomPan = true,
+                state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
+
+                    if (zoomChange > 1)
+                        zoom += zoomChange
+                    if (zoomChange < 1)
+                        zoom -= zoomChange
+
+
+                    //if (zoomChange == 1.toFloat())
+                    rotation += rotationChange
+
+
+                    if (zoomChange == 1.toFloat() && rotationChange == 0.toFloat()) {
+                        yy += offsetChange.y * 0.5f
+                        xx += offsetChange.x * 0.5f
+
+                    }
+                })
+
     ) {
 
-        Column() {
-            // repeat(100) {
-            Text("Item $number", Modifier.padding(16.dp))
-            Text("Item $xx", Modifier.padding(16.dp))
-            Text("Item $yy", Modifier.padding(16.dp))
-            Text("Item $text", Modifier.padding(16.dp))
-            // }
+//        Column() {
+//            // repeat(100) {
+//            Text("Item $number", Modifier.padding(16.dp))
+//            Text("Item $xx", Modifier.padding(16.dp))
+//            Text("Item $yy", Modifier.padding(16.dp))
+//            Text("Item $text", Modifier.padding(16.dp))
+//            // }
 
             val painter = rememberAsyncImagePainter("")
             var myPainter by remember { mutableStateOf(painter as Painter) }
             AsyncImage(
                 model = "data:image/jpeg;base64,$frameState",
                 contentDescription = null,
-                modifier = Modifier.size(300.dp, 200.dp),
+                modifier = Modifier.fillMaxSize(),
                 onSuccess = { successState: AsyncImagePainter.State.Success ->
                     // Image loaded successfully, you can access the drawable here
                     myPainter = successState.painter
@@ -113,7 +164,7 @@ fun MiddleScreenCamView(
                 placeholder = myPainter,
             )
 
-        }
+      //  }
 
     }
 }
