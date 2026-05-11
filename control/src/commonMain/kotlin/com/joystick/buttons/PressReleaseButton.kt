@@ -1,23 +1,23 @@
 package com.joystick.buttons
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
-import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.NewLabel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.jonintendo.control.generated.resources.Res
+import com.jonintendo.control.generated.resources.cam
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
@@ -35,7 +35,7 @@ fun PressReleaseButton(
 fun PressReleaseButton(
     onPress: () -> Unit,
     onRelease: () -> Unit,
-    icon: ImageVector?,
+    icon: DrawableResource?,
     description: String = "Press and Release Me",
     modifier: Modifier = Modifier,
 ) {
@@ -66,11 +66,19 @@ fun PressReleaseButton(
             modifier = modifier.width(50.dp),
             interactionSource = interactionSource
         ) {
-            Icon(
-                icon,
-                contentDescription = description,
-                modifier = Modifier.fillMaxSize()
+//            Icon(
+//                icon,
+//                contentDescription = description,
+//                modifier = Modifier.fillMaxSize()
+//            )
+            Image(
+                painter = painterResource(
+                    resource = icon
+                ),
+                contentDescription = "My Vector Image",
+                modifier = Modifier.size(100.dp)
             )
+
         }
     } else {
         Button(

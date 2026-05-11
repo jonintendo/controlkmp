@@ -1,4 +1,4 @@
-package com.joystick.Layouts
+package com.joystick.layouts
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,11 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material.icons.filled.Map
+
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,10 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.joystick.ControlButton
-import com.joystick.buttons.AxelButton
-import com.joystick.buttons.ColumnButton
-import com.joystick.buttons.RowButton
+import com.joystick.ControlScreen
 
+import com.joystick.groupButtons.DPadButtons
+import com.joystick.groupButtons.ColumnButton
+import com.joystick.groupButtons.RowButton
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import com.jonintendo.control.generated.resources.Res
+import com.jonintendo.control.generated.resources.split
 
 @Composable
 fun ControleView2(
@@ -36,9 +37,9 @@ fun ControleView2(
     bottomLeftButtons: List<ControlButton>,
     topRightButtons: MutableList<List<ControlButton>>,
     bottomRightButtons: List<ControlButton>,
-    leftAxisButtons: List<ControlButton>,
-    rightAxisButtons: List<ControlButton>,
-    middleScreen: List<@Composable () -> Unit>,
+    leftDPadButtons: List<ControlButton>,
+    rightDPadButtons: List<ControlButton>,
+    middleScreen: List<ControlScreen>,
     middleScreenBottomButtons: List<ControlButton>,
 ) {
 
@@ -46,45 +47,30 @@ fun ControleView2(
     val sideColumnsWidth = 150.dp
 
 
-    var showMiddleScreen by remember { mutableStateOf(0) }
+    var showMiddleScreen by remember { mutableStateOf("") }
     var splitMiddleScreen by remember { mutableStateOf(false) }
 
-    val screenButtons = listOf(
+
+    val screenButtons = mutableListOf(
         ControlButton(
             action = {
-                splitMiddleScreen = false
-                showMiddleScreen = 1
-                println("Map")
+                splitMiddleScreen = !splitMiddleScreen
+                println("split")
             },
-            icon = Icons.Default.Map
-        ),
-        ControlButton(
-            action = {
-                splitMiddleScreen = false
-                showMiddleScreen = 0
-                println("camera")
-            },
-            icon = Icons.Default.Camera
-        ),
-        ControlButton(
-            action = {
-                splitMiddleScreen = false
-                showMiddleScreen = 2
-                println("camera")
-            },
-            icon = Icons.Default.Camera
-        ),
-
-
-//        ControlButton(
-//            action = {
-//                splitMiddleScreen = !splitMiddleScreen
-//                println("split")
-//            },
-//            icon = Icons.Default.Splitscreen
-//        )
-
+            icon = Res.drawable.split
+        )
     )
+
+    screenButtons.addAll(middleScreen.mapIndexed { index, controlScreen ->
+        ControlButton(
+            action = {
+                splitMiddleScreen = false
+                showMiddleScreen = controlScreen.name
+
+            },
+            icon = controlScreen.icon
+        )
+    })
 
 
     Box(
@@ -105,7 +91,15 @@ fun ControleView2(
                 verticalArrangement = Arrangement.SpaceAround
             ) {
                 ColumnButton(topLeftButtons)
-                AxelButton(leftAxisButtons, sideColumnsWidth)
+                if (leftDPadButtons.size >= 4) {
+                    DPadButtons(
+                        leftDPadButtons[0],
+                        leftDPadButtons[1],
+                        leftDPadButtons[2],
+                        leftDPadButtons[3],
+                        sideColumnsWidth
+                    )
+                }
                 ColumnButton(bottomLeftButtons)
             }
 
@@ -122,18 +116,15 @@ fun ControleView2(
                         LazyVerticalGrid(
                             GridCells.Fixed(2),
                             content = {
-                                items(4) { i ->
-                                    if (i == 0)
-                                        middleScreen[i]()
-
-                                    if (i == 3)
-                                        middleScreen[i - 2]()
+                                items(middleScreen.size) { i ->
+                                    middleScreen[i].screen()
                                 }
                             },
                             modifier = Modifier.fillMaxSize()
                         )
+
                     } else {
-                        middleScreen[showMiddleScreen]()
+                        middleScreen.firstOrNull { it.name == showMiddleScreen }?.screen()
                     }
                 }
                 RowButton(middleScreenBottomButtons)
@@ -148,7 +139,17 @@ fun ControleView2(
                 topRightButtons.map { buttons ->
                     RowButton(buttons)
                 }
-                AxelButton(rightAxisButtons, sideColumnsWidth)
+
+
+                if (rightDPadButtons.size >= 4) {
+                    DPadButtons(
+                        rightDPadButtons[0],
+                        rightDPadButtons[1],
+                        rightDPadButtons[2],
+                        rightDPadButtons[3],
+                        sideColumnsWidth
+                    )
+                }
                 RowButton(bottomRightButtons)
                 RowButton(screenButtons)
             }
