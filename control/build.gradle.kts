@@ -36,13 +36,8 @@ kotlin {
         compileSdk = 36
         minSdk = 24
 
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        androidResources {
+            enable = true
         }
 
         compilations.configureEach {
@@ -50,8 +45,6 @@ kotlin {
                 jvmTarget.set(JvmTarget.JVM_11)
             }
         }
-
-
     }
 
     jvm()
@@ -90,22 +83,16 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                //implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlin.stdlib)
                 implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.ui)
                 implementation(compose.components.resources)
-                implementation(compose.materialIconsExtended)
+               // implementation(compose.materialIconsExtended)
                 implementation(libs.coil.compose)
                 //implementation(libs.icons.compose.material)
                // implementation(libs.icons.extended.compose.material)
-            }
-        }
-
-        commonTest {
-            dependencies {
-                implementation(libs.kotlin.test)
             }
         }
 
@@ -116,13 +103,6 @@ kotlin {
             }
         }
 
-        getByName("androidDeviceTest") {
-            dependencies {
-                implementation(libs.androidx.runner)
-                implementation(libs.androidx.core)
-                implementation(libs.androidx.testExt.junit)
-            }
-        }
 
         iosMain {
             dependencies {
