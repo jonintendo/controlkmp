@@ -7,10 +7,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.DrawableResource
 
 data class ControlButton(
-    var description: String = "button description",
-    var action: () -> Unit = { println("take action") },
+    var action: (positionx: Float , positiony: Float) -> Unit = { positionx, positiony -> println("take action x: $positionx,y: $positiony") },
     var modifier: Modifier = Modifier.background(color = Color.Transparent),
+    var description: String? = null,
     var icon: DrawableResource? = null,
-    var actionRelease: () -> Unit  = { println("$description release") },
+    var actionRelease: (positionx: Float, positiony: Float) -> Unit = { positionx, positiony ->
+        println(
+            "take action x: $positionx,y: $positiony"
+        )
+    }
 )
 

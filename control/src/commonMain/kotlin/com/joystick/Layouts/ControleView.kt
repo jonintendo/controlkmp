@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 
 
@@ -53,7 +54,7 @@ fun ControleView(
 
     val screenButtons = mutableListOf(
         ControlButton(
-            action = {
+            action = { f, t ->
                 splitMiddleScreen = !splitMiddleScreen
                 println("split")
             },
@@ -63,7 +64,7 @@ fun ControleView(
 
     screenButtons.addAll(middleScreen.mapIndexed { index, controlScreen ->
         ControlButton(
-            action = {
+            action = { f, t ->
                 splitMiddleScreen = false
                 showMiddleScreen = controlScreen.name
 
@@ -97,7 +98,7 @@ fun ControleView(
                         leftDPadButtons[1],
                         leftDPadButtons[2],
                         leftDPadButtons[3],
-                        sideColumnsWidth
+                        Modifier.size(sideColumnsWidth)
                     )
                 }
                 ColumnButton(bottomLeftButtons)
@@ -145,7 +146,7 @@ fun ControleView(
                         rightDPadButtons[1],
                         rightDPadButtons[2],
                         rightDPadButtons[3],
-                        sideColumnsWidth
+                        Modifier.size(sideColumnsWidth)
                     )
                 }
                 RowButton(bottomRightButtons)

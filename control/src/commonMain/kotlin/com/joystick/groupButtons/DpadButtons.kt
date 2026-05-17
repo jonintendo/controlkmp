@@ -2,8 +2,10 @@ package com.joystick.groupButtons
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.jonintendo.control.generated.resources.Res
@@ -32,28 +35,33 @@ fun DPadButtons(
     left: ControlButton,
     right: ControlButton,
     down: ControlButton,
-    size: Dp
+    modifier: Modifier
 ) {
-    Box(Modifier.size(size)) {
-        val buttonSize = 50.dp
+    BoxWithConstraints(
+        modifier,
+        Alignment.Center
+    ) {
+        val wb = maxWidth / 3
+        val hb = maxHeight / 3
+
         Column(
-            Modifier.fillMaxSize(100f),
+            Modifier.fillMaxSize(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+
 
             PressReleaseButton(
                 description = up.description,
                 onPress = up.action,
                 onRelease = up.actionRelease,
-                // icon = Icons.Default.ArrowCircleUp,
-                icon = Res.drawable.up,
-                modifier = up.modifier.size(buttonSize)
+                icon = up.icon,
+                modifier = up.modifier.size(wb, hb)
             )
 
 
             Row(
-                Modifier.fillMaxWidth(100f),
+                Modifier.fillMaxWidth(1f),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
 
@@ -61,9 +69,8 @@ fun DPadButtons(
                     description = left.description,
                     onPress = left.action,
                     onRelease = left.actionRelease,
-                    // icon = Icons.Default.ArrowCircleLeft,
-                    icon = Res.drawable.left,
-                    modifier = up.modifier.size(buttonSize)
+                    icon = left.icon,
+                    modifier = left.modifier.size(wb, hb)
                 )
 
 
@@ -71,9 +78,8 @@ fun DPadButtons(
                     description = right.description,
                     onPress = right.action,
                     onRelease = right.actionRelease,
-                    // icon = Icons.Default.ArrowCircleRight,
-                    icon = Res.drawable.right,
-                    modifier = up.modifier.size(buttonSize)
+                    icon = right.icon,
+                    modifier = right.modifier.size(wb, hb)
                 )
 
             }
@@ -82,9 +88,8 @@ fun DPadButtons(
                 description = down.description,
                 onPress = down.action,
                 onRelease = down.actionRelease,
-                //   icon = Icons.Default.ArrowCircleDown,
-                icon = Res.drawable.down,
-                modifier = up.modifier.size(buttonSize)
+                icon = down.icon,
+                modifier = down.modifier.size(wb, hb)
             )
 
         }

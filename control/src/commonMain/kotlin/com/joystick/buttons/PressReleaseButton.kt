@@ -3,6 +3,7 @@ package com.joystick.buttons
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.jonintendo.control.generated.resources.Res
 import com.jonintendo.control.generated.resources.cam
+import com.jonintendo.control.generated.resources.empty
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -24,19 +26,47 @@ import org.jetbrains.compose.resources.painterResource
 fun PressReleaseButton(
     onPress: () -> Unit,
     onRelease: () -> Unit,
-    description: String = "Press and Release Me",
+    description: String,
     modifier: Modifier = Modifier,
 ) {
-    PressReleaseButton(onPress, onRelease, null, description, modifier)
+    PressReleaseButton({t,u->onPress()}, {t,u->onRelease()}, null, description, modifier)
+}
+
+@Composable
+fun PressReleaseButton(
+    onPress: () -> Unit,
+    onRelease: () -> Unit,
+    icon: DrawableResource,
+    modifier: Modifier = Modifier,
+) {
+    PressReleaseButton({t,u->onPress()}, {t,u->onRelease()}, icon, null, modifier)
 }
 
 
 @Composable
 fun PressReleaseButton(
     onPress: () -> Unit,
-    onRelease: () -> Unit,
+    description: String,
+    modifier: Modifier = Modifier,
+) {
+    PressReleaseButton({t,u->onPress()}, {t,u->}, null, description, modifier)
+}
+@Composable
+fun PressReleaseButton(
+    onPress: () -> Unit,
+    icon: DrawableResource,
+    modifier: Modifier = Modifier,
+) {
+    PressReleaseButton({t,u->onPress()}, {t,u->}, icon, null, modifier)
+}
+
+
+@Composable
+fun PressReleaseButton(
+    onPress: (posX: Float , posY: Float) -> Unit,
+    onRelease: (posX: Float, posY: Float) -> Unit,
     icon: DrawableResource?,
-    description: String = "Press and Release Me",
+    description: String?,
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -46,47 +76,60 @@ fun PressReleaseButton(
         interactionSource.interactions.collect { interaction ->
             when (interaction) {
                 is PressInteraction.Press -> {
-                    onPress()
+                    onPress(0.0f,0.0f)
                 }
 
                 is PressInteraction.Release -> {
-                    onRelease()
+                    onRelease(0.0f,0.0f)
                 }
 
                 is PressInteraction.Cancel -> {
                     // Handle cases where the press is cancelled (e.g., user drags finger away)
-                    onRelease()
+                    onRelease(0.0f,0.0f)
                 }
             }
         }
     }
+
+
     if (icon != null) {
         IconButton(
             onClick = {},
-            modifier = modifier.width(50.dp),
+            modifier = modifier,
             interactionSource = interactionSource
         ) {
-//            Icon(
-//                icon,
-//                contentDescription = description,
-//                modifier = Modifier.fillMaxSize()
-//            )
             Image(
                 painter = painterResource(
                     resource = icon
                 ),
-                contentDescription = "My Vector Image",
-                modifier = Modifier.size(100.dp)
+                contentDescription = description,
+                modifier = Modifier.fillMaxSize()
             )
 
         }
     } else {
-        Button(
-            onClick = { /* The onClick is still required but can be empty if you only need press/release */ },
-            modifier = modifier,
-            interactionSource = interactionSource // Pass the interactionSource to the Button
-        ) {
-            Text(description)
+        if (description != null) {
+            Button(
+                onClick = { /* The onClick is still required but can be empty if you only need press/release */ },
+                modifier = modifier,
+                interactionSource = interactionSource // Pass the interactionSource to the Button
+            ) {
+                Text(description)
+            }
+        } else {
+            IconButton(
+                onClick = {},
+                modifier = modifier,
+                interactionSource = interactionSource
+            ) {
+                Image(
+                    painter = painterResource(
+                        resource = Res.drawable.empty
+                    ),
+                    contentDescription = "My Vector Image",
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }
