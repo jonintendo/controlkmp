@@ -29,7 +29,8 @@ fun ControleServers(views: List<ControlScreen>) {
             items(views.size) { i ->
                 Column(
                     modifier = Modifier
-                        .fillMaxSize().height(300.dp)
+                        .fillMaxSize()
+                        .height(300.dp)
                         .combinedClickable(
                             onClick = {
                                 contentt = views[i].screen
@@ -44,7 +45,6 @@ fun ControleServers(views: List<ControlScreen>) {
                             })
                     // .size(200.dp),
                     //contentAlignment = Alignment.Center,
-
                 ) {
                     Text("window: $i, ${views[0].name} ")
                     views[i].screen()
