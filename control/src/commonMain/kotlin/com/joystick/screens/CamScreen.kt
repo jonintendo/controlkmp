@@ -7,6 +7,7 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -52,8 +53,8 @@ fun CamScreen(
 
     Box(
         modifier
-            .fillMaxSize()
-           // .background(Color.Blue)
+            // .fillMaxSize()
+            // .background(Color.Blue)
             .pointerInput(Unit) {
 //                detectTransformGestures { _, pan, zoom, _ ->
 //                    println("Pointer Panx: ${pan.x}, pany:${pan.y} , zoom:$zoom")
@@ -138,29 +139,18 @@ fun CamScreen(
                 })
 
     ) {
-
-//        Column() {
-//            // repeat(100) {
-//            Text("Item $number", Modifier.padding(16.dp))
-//            Text("Item $xx", Modifier.padding(16.dp))
-//            Text("Item $yy", Modifier.padding(16.dp))
-//            Text("Item $text", Modifier.padding(16.dp))
-//            // }
-
-            val painter = rememberAsyncImagePainter("")
-            var myPainter by remember { mutableStateOf(painter as Painter) }
-            AsyncImage(
-                model = "data:image/jpeg;base64,$frameState",
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                onSuccess = { successState: AsyncImagePainter.State.Success ->
-                    // Image loaded successfully, you can access the drawable here
-                    myPainter = successState.painter
-                },
-                placeholder = myPainter,
-            )
-
-      //  }
+        val painter = rememberAsyncImagePainter("")
+        var myPainter by remember { mutableStateOf(painter as Painter) }
+        AsyncImage(
+            model = "data:image/jpeg;base64,$frameState",
+            contentDescription = null,
+            modifier = Modifier.wrapContentSize(),
+            onSuccess = { successState: AsyncImagePainter.State.Success ->
+                // Image loaded successfully, you can access the drawable here
+                myPainter = successState.painter
+            },
+            placeholder = myPainter,
+        )
 
     }
 }
