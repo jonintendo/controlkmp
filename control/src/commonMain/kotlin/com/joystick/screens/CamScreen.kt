@@ -27,6 +27,7 @@ import coil3.compose.rememberAsyncImagePainter
 
 @Composable
 fun CamScreen(
+    modifier: Modifier,
     frameFlow: MutableStateFlow<String>,
     GimballYawAdd: () -> Unit,
     GimballYawDrop: () -> Unit,
@@ -50,9 +51,9 @@ fun CamScreen(
     var text by remember { mutableStateOf("Click magenta box!") }
 
     Box(
-        Modifier
+        modifier
             .fillMaxSize()
-            .background(Color.Blue)
+           // .background(Color.Blue)
             .pointerInput(Unit) {
 //                detectTransformGestures { _, pan, zoom, _ ->
 //                    println("Pointer Panx: ${pan.x}, pany:${pan.y} , zoom:$zoom")
