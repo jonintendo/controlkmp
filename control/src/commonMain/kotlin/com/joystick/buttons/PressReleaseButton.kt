@@ -1,18 +1,21 @@
 package com.joystick.buttons
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.jonintendo.control.generated.resources.Res
@@ -112,7 +115,13 @@ fun PressReleaseButton(
             Button(
                 onClick = { /* The onClick is still required but can be empty if you only need press/release */ },
                 modifier = modifier,
-                interactionSource = interactionSource // Pass the interactionSource to the Button
+                interactionSource = interactionSource, // Pass the interactionSource to the Button
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(0xFF2E7D32), // Custom green background
+                    contentColor = Color.White,          // White text color
+                    disabledBackgroundColor = Color.Gray, // Color when button is disabled
+                    disabledContentColor = Color.LightGray
+                )
             ) {
                 Text(description)
             }

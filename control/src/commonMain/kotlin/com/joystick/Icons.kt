@@ -15,6 +15,12 @@ import com.jonintendo.control.generated.resources.stop
 import com.jonintendo.control.generated.resources.up
 import com.jonintendo.control.generated.resources.wifi_off
 import com.jonintendo.control.generated.resources.wifi_on
+import com.jonintendo.control.generated.resources.layers
+import com.jonintendo.control.generated.resources.landing
+import com.jonintendo.control.generated.resources.location
+import com.jonintendo.control.generated.resources.takeoff
+import com.jonintendo.control.generated.resources.droneTarget
+import com.jonintendo.control.generated.resources.home
 
 
 val mapIcon = Res.drawable.map
@@ -30,6 +36,13 @@ val downIcon = Res.drawable.down
 val leftIcon = Res.drawable.left
 val rightIcon = Res.drawable.right
 val emptyIcon = Res.drawable.empty
+val layers = Res.drawable.layers
+val location = Res.drawable.location
+val landing = Res.drawable.landing
+val takeoff = Res.drawable.takeoff
+var droneTarget = Res.drawable.droneTarget
+var home = Res.drawable.home
+
 
 
 
