@@ -21,6 +21,7 @@ import com.jonintendo.control.generated.resources.location
 import com.jonintendo.control.generated.resources.takeoff
 import com.jonintendo.control.generated.resources.droneTarget
 import com.jonintendo.control.generated.resources.home
+import com.jonintendo.control.generated.resources.restart
 
 
 val mapIcon = Res.drawable.map
@@ -42,6 +43,7 @@ val landing = Res.drawable.landing
 val takeoff = Res.drawable.takeoff
 var droneTarget = Res.drawable.droneTarget
 var home = Res.drawable.home
+var restart = Res.drawable.restart
 
 
 
