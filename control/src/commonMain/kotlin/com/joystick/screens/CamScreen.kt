@@ -25,11 +25,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
+import com.joystick.utils.toBase64encode
 
 @Composable
 fun CamScreen(
     modifier: Modifier,
-    frameFlow: MutableStateFlow<String>,
+    frameFlow: MutableStateFlow<ByteArray>,
     GimballYawAdd: () -> Unit,
     GimballYawDrop: () -> Unit,
     GimballPitchAdd: () -> Unit,
@@ -142,7 +143,7 @@ fun CamScreen(
         val painter = rememberAsyncImagePainter("")
         var myPainter by remember { mutableStateOf(painter as Painter) }
         AsyncImage(
-            model = "data:image/jpeg;base64,$frameState",
+            model = "data:image/jpeg;base64,${frameState.toBase64encode()}",
             contentDescription = null,
             modifier = Modifier.wrapContentSize(),
             onSuccess = { successState: AsyncImagePainter.State.Success ->
